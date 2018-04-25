@@ -160,6 +160,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        //MATERIALIZE
+        Skydiver\LaravelMaterializeCSS\MaterializeCSSServiceProvider::class,
+
     ],
 
     /*
@@ -208,7 +211,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        //MATERIALIZE
+        'MaterializeCSS' => Skydiver\LaravelMaterializeCSS\MaterializeCSS::class,
     ],
 
 ];
