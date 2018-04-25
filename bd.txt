@@ -1,0 +1,14 @@
+atividades
+
+nome string not null 255
+descrição string not null 600
+dt_inicio datetime not null
+dt_fim datetime nullable
+status_id integer 
+situacao boolean
+
+
+status
+nome
+descricao
+
