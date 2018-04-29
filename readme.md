@@ -29,8 +29,5 @@ php artisan db:seed
 php artisan serve
 ```
 
-And you can go to your http://localhost:8000
+And you can go to http://localhost:8000
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
