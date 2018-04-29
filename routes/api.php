@@ -19,4 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/atividade', 'AtividadeController@all');
 Route::post('/atividade', 'AtividadeController@store');
+Route::post('/filter', 'AtividadeController@filter');
 Route::get('/status', 'AtividadeController@status');

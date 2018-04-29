@@ -45,6 +45,21 @@ class AtividadeController extends Controller
         return $status;
     }
 
+    public function filter(Request $request)
+    {
+        $atividades = Atividade::with('status_synonym');
+
+        if($request->status_id != null)
+            $atividades->where('status_id', $request->status_id);
+
+        if($request->situacao != null)
+            $atividades->where('situacao', boolval($request->situacao));
+
+        $atividades->orderBy('created_at','desc');
+
+        return $atividades->get();
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -173,27 +173,50 @@ input:checked + .slider:before {
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card card-default">
-                    <div class="card-header">Example Component</div>
+                    <div class="card-header">Lista de Atividades</div>
 
                     <div class="card-body">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#novaAtividade">
-                          Novo
-                        </button>
-                        <br><br>
-                        <table class="table">
-                            <thead>
+                        <table class="table table-responsive-md">
+                            <thead class="thead-dark">
                                 <th>Nome</th>
                                 <th>Descrição</th>
                                 <th>Início</th>
                                 <th>Fim</th>
                                 <th>Situação</th>
                                 <th>Status</th>
-                                <th>Ações</th>
+                                <th colspan="2">Ações</th>
                             </thead>
                             <tbody>
-                                <tr v-for="atividade in atividades">
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <select class="form-control form-control"
+                                                v-model="filters.situacao"
+                                                v-on:change="filter">
+                                            <option value=""></option>
+                                            <option value="1">Ativo</option>
+                                            <option value="0">Não ativo</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control form-control" 
+                                                v-model="filters.status_id"
+                                                :readonly="isReadonly"
+                                                v-on:change="filter"
+                                                >
+                                              <option value=""></option>
+                                              <option v-for="stat in status" :value="stat.id">{{stat.display_name}}</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="2"></td>
+
+                                </tr>
+                                <tr v-for="atividade in atividades" :class="atividade.status_synonym.name == 'concluido' ? 'table-secondary': ''">
                                     <td>{{atividade.nome}}</td>
                                     <td>{{atividade.descricao}}</td>
                                     <td>{{atividade.dt_inicio}}</td>
@@ -201,14 +224,26 @@ input:checked + .slider:before {
                                     <td>{{atividade.situacao | normalize_situacao}}</td>
                                     <td>{{atividade.status_synonym.display_name}}</td>
                                     <td>
-                                        <span v-on:click="editAtividade(atividade)">Editar</span>
-                                        <span v-on:click="deleteAtividade(atividade.id)">Deletar</span>
+                                        <button class="btn btn-info fas fa-edit" 
+                                                v-on:click="editAtividade(atividade)"></button>
+                                        
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger fas fa-trash-alt" 
+                                                v-on:click="deleteAtividade(atividade.id)"></button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <br>
+                <button type="button" 
+                        class="btn btn-success float-right" 
+                        data-toggle="modal" 
+                        data-target="#novaAtividade">
+                    Novo
+                </button>
             </div>
         </div>
     </div>
@@ -260,6 +295,10 @@ input:checked + .slider:before {
                 atividades: [],
                 status: [],
                 errors: [],
+                filters: {
+                    'status_id': '',
+                    'situacao': ''
+                }
             }
         },
 
@@ -271,20 +310,24 @@ input:checked + .slider:before {
 
         watch:{
             status_id() {
-                /*if(this.status_id == 5)
-                    this.isRequired = true;
-                else
-                    this.isRequired = false;*/
                 this.isRequired = this.status_id == 5 ? true: false;
             }
         },
 
         methods:{
+
+            filter: function(){
+                var self = this;
+                axios.post('/api/filter', this.filters)
+                    .then(function(response){
+                        self.atividades = response.data;
+                    });
+            },
+
             getStatus: function(){
                 var self = this;
                 axios.get('/api/status')
                     .then(function(response){
-                        //console.log(response.data);
                         self.status = response.data;
                     });
             },
@@ -293,7 +336,6 @@ input:checked + .slider:before {
                 var self = this;
                 axios.get('/api/atividade')
                     .then(function(response){
-                        //console.log(response.data);
                         self.atividades = response.data;
                     });
             },
@@ -312,7 +354,6 @@ input:checked + .slider:before {
                     axios.post('/api/atividade', this.fields)
                         .then(function(response){
                             console.log(response.data);
-                            //self.atividades = response.data;
                             self.getAtividades();
                             $('#novaAtividade').modal('hide');
                             self.clearFields();
@@ -334,6 +375,10 @@ input:checked + .slider:before {
                     'status_id': '',
                     'situacao': false,
                     'id': '',
+                };
+                this.filters = {
+                    'status_id': '',
+                    'situacao': ''
                 };
                 this.isRequired = false;
                 this.isReadonly = false;

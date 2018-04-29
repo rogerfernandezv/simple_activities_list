@@ -20,6 +20,7 @@
     "vue": "^2.5.7"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free-webfonts": "^1.0.6",
     "install": "^0.11.0",
     "npm": "^6.0.0",
     "vuejs-datepicker": "^1.0.4"
