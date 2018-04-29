@@ -16,7 +16,7 @@ npm install
 
 ## Config
 
-Edit you .env with mysql host, username and password.
+Edit you .env with mysql host, username, password and database name.
 
 ```
 php artisan migrate
