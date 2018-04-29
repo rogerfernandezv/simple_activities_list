@@ -20,3 +20,5 @@ Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/atividade', 'AtividadeController@index')->name('home');
+
+Route::get('/atividade/{id}/delete', 'AtividadeController@destroy');

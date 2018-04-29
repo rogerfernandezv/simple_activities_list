@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Atividade;
+use App\Status;
 
 class AtividadeController extends Controller
 {
@@ -25,9 +26,23 @@ class AtividadeController extends Controller
      */
     public function all()
     {
-        $atividades = Atividade::all();
+        $atividades = Atividade::orderBy('created_at','desc')
+                                ->with('status_synonym')
+                                ->get();
 
         return $atividades;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function status()
+    {
+        $status = Status::all();
+
+        return $status;
     }
 
     /**
@@ -48,9 +63,34 @@ class AtividadeController extends Controller
      */
     public function store(Request $request)
     {
-        $atividade = new Atividade($request);
 
-        return $atividade;
+        $request->validate([
+            'nome' => 'required|max:10',
+            'descricao' => 'required|max:15'
+        ]);
+
+        $data_fim = null;
+
+        if($request->dt_fim != null && strlen($request->dt_fim) > 0)
+            $data_fim = new \Carbon\Carbon($request->dt_fim);
+
+        $data_inicio = new \Carbon\Carbon($request->dt_inicio);
+
+        if(isset($request->id) && strlen($request->id) > 0)
+        {
+            $atividade = Atividade::find($request->id);
+            $atividade->fill($request->all());
+        }
+        else
+        {
+            $atividade = new Atividade($request->all());
+        }
+
+        $atividade->dt_inicio = $data_inicio;
+        $atividade->dt_fim = $data_fim;
+
+        $atividade->save();
+
     }
 
     /**
@@ -96,7 +136,7 @@ class AtividadeController extends Controller
     public function destroy($id)
     {
         $atividade = Atividade::find($id);
-
-        return $atividade;
+        $atividade->delete();
+        return '1';
     }
 }
