@@ -31,3 +31,6 @@ php artisan serve
 
 And you can go to http://localhost:8000
 
+## Obs
+
+The page is a vue component: resources/assets/js/components/Atividades.vue
